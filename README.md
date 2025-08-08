@@ -27,13 +27,28 @@ The Invariant Labs research revealed a critical vulnerability where attackers ca
 ## 📁 Repository Contents
 
 ```
-├── cross-repo-blocker.sh    # 🛡️ Main security interceptor - blocks cross-repo attacks
-├── audit-logger.sh          # 📝 Audit interceptor - monitors all responses  
-├── compose.yaml             # 🐳 Docker Compose with security architecture
-├── test-attack.py           # 🎯 Attack simulation that proves protection works
-├── test-local.sh            # 🧪 Local testing script for interceptors
-└── README.md               # 📖 Complete documentation
+├── cross-repo-blocker.sh       # 🛡️ CORE: Session isolation - blocks cross-repo attacks
+├── audit-logger.sh             # 📝 CORE: Basic audit logging and sensitive data warnings
+├── sensitive-data-filter.sh    # 🔒 ADVANCED: DLP protection - blocks sensitive data exfiltration  
+├── attack-pattern-detector.sh  # 🎯 ADVANCED: Behavioral analysis - detects attack sequences
+├── sequence-analyzer.sh        # 🧠 ADVANCED: Content analysis - identifies prompt injection
+├── compose.yaml                # 🐳 Docker Compose with security architecture
+├── test-attack.py              # 🎯 Attack simulation that proves protection works
+├── test-local.sh               # 🧪 Local testing script for interceptors
+├── test-attack-fixed.py        # ✅ Fixed version showing successful blocking
+└── README.md                   # 📖 Complete documentation
 ```
+
+### Interceptor Categories
+
+**🛡️ Core Protection (Essential)**
+- `cross-repo-blocker.sh` - **PRIMARY DEFENSE**: Prevents the exact Invariant Labs attack
+- `audit-logger.sh` - **MONITORING**: Basic logging and sensitive data warnings
+
+**🔒 Advanced Protection (Enterprise)**
+- `sensitive-data-filter.sh` - **DLP**: Scans responses for secrets, salaries, confidential data
+- `attack-pattern-detector.sh` - **BEHAVIORAL**: Identifies suspicious tool call sequences  
+- `sequence-analyzer.sh` - **CONTENT**: Detects prompt injection in issue content
 
 ## 🚀 **Proven Results** - Quick Demo
 
@@ -54,9 +69,9 @@ chmod +x *.sh
 export GITHUB_PERSONAL_ACCESS_TOKEN="your_github_token_here"
 ```
 
-### 2. **PROOF**: Test Interceptor Logic Locally
+### 2. **PROOF**: Test Core Interceptor Logic Locally
 ```bash
-# Demonstrate the security blocking in action
+# Demonstrate the core security blocking in action
 ./test-local.sh
 ```
 
@@ -167,7 +182,7 @@ Result: Attack neutralized, data protected ✅
 
 ## 🔍 **Technical**: How the Interceptors Work
 
-### Cross-Repository Blocker (`cross-repo-blocker.sh`)
+### Core Protection: Cross-Repository Blocker (`cross-repo-blocker.sh`)
 ```bash
 # Simple, reliable JSON parsing (no dependencies)
 repo=$(echo "$input" | grep -o '"repo":"[^"]*"' | cut -d'"' -f4)
@@ -188,14 +203,102 @@ JSON
 fi
 ```
 
+### Advanced Protection: Sensitive Data Filter (`sensitive-data-filter.sh`)
+```bash
+# Scan for sensitive data patterns in any response
+if echo "$RESPONSE_TEXT" | grep -qiE '(salary|compensation|\$[0-9]{4,}|confidential|secret|internal)'; then
+    echo "🚨 BLOCKED: Sensitive data pattern detected in response" >&2
+    # Return filtered response
+    cat << 'JSON'
+{
+  "content": [{"text": "🛡️ RESPONSE FILTERED: Sensitive data detected and blocked"}],
+  "isError": false
+}
+JSON
+    exit 0
+fi
+```
+
+### Behavioral Analysis: Attack Pattern Detector (`attack-pattern-detector.sh`)
+```bash
+# Pattern 1: Issue reading followed by repository enumeration
+if echo "$RECENT_CALLS" | grep -q "list_issues" && [[ "$tool_name" == "get_repositories" ]]; then
+    echo "🚨 ATTACK PATTERN DETECTED: Issue reading → Repository enumeration" >&2
+    echo "This matches the Invariant Labs attack pattern!" >&2
+    # Block the suspicious sequence
+fi
+```
+
+### Content Analysis: Sequence Analyzer (`sequence-analyzer.sh`)
+```bash
+# Look for prompt injection indicators from the Invariant Labs attack
+if echo "$RESPONSE_TEXT" | grep -qiE '(read.*README.*all.*repos|add.*chapter.*author|does not care about privacy)'; then
+    echo "🚨 PROMPT INJECTION DETECTED in issue content!" >&2
+    # Return sanitized response
+fi
+```
+
 ### Key Security Features:
 - 🔒 **Session isolation**: First repository access locks the session
 - 🛡️ **Real-time blocking**: Attacks stopped during execution
-- 📝 **Audit logging**: Complete visibility into all attempts
+- 📝 **Complete audit logging**: Full visibility into all attempts
 - ⚡ **Zero latency**: Blocking happens instantly
+- 🧠 **Behavioral analysis**: Detects attack patterns and sequences
+- 🔒 **Content filtering**: Removes sensitive data and prompt injections
+
+## 🏢 **Production Ready**: Enterprise Deployment
+
+### Basic Protection (Minimal Setup)
+```yaml
+services:
+  mcp-gateway:
+    image: docker/mcp-gateway
+    command:
+      - --interceptor=before:exec:/security/cross-repo-blocker.sh
+      - --interceptor=after:exec:/security/audit-logger.sh
+      - --servers=github-official
+      - --log-calls
+```
+
+### Advanced Protection (Full Defense-in-Depth)
+```yaml
+services:
+  mcp-gateway:
+    image: docker/mcp-gateway
+    command:
+      - --interceptor=before:exec:/security/cross-repo-blocker.sh
+      - --interceptor=before:exec:/security/attack-pattern-detector.sh
+      - --interceptor=after:exec:/security/sensitive-data-filter.sh
+      - --interceptor=after:exec:/security/sequence-analyzer.sh
+      - --interceptor=before:http:https://siem.company.com/log-request
+      - --block-secrets
+      - --verify-signatures
+      - --log-calls
+    volumes:
+      - ./:/security:ro
+      - session-data:/tmp
+    environment:
+      - GITHUB_TOKEN_SOURCE=vault://production/github-tokens
+```
+
+### Enterprise SIEM Integration
+```yaml
+services:
+  mcp-gateway:
+    image: docker/mcp-gateway
+    command:
+      - --interceptor=before:exec:/security/cross-repo-blocker.sh
+      - --interceptor=after:http:https://dlp.company.com/scan-response
+      - --interceptor=before:http:https://siem.company.com/log-request
+      - --interceptor=after:exec:/security/audit-logger.sh
+    volumes:
+      - ./security-policies:/security:ro
+      - session-data:/tmp
+```
 
 ## 🔧 **Customization**: Add Your Own Security Rules
 
+### Repository Access Controls
 ```bash
 # Block access to sensitive repositories
 if [[ "$repo" =~ (secrets|private|internal|salary) ]]; then
@@ -208,7 +311,10 @@ if [[ "$owner" == "high-risk-user" ]]; then
     echo "🚨 BLOCKED: User access restricted" >&2
     # Return security block...
 fi
+```
 
+### Time-Based Security
+```bash
 # Time-based restrictions
 current_hour=$(date +%H)
 if [[ $current_hour -lt 9 || $current_hour -gt 17 ]]; then
@@ -217,25 +323,13 @@ if [[ $current_hour -lt 9 || $current_hour -gt 17 ]]; then
 fi
 ```
 
-## 🏢 **Production Ready**: Enterprise Deployment
-
-```yaml
-# production-compose.yml
-services:
-  mcp-gateway:
-    image: docker/mcp-gateway
-    command:
-      - --interceptor=before:exec:/security/cross-repo-blocker.sh
-      - --interceptor=after:http:https://dlp.company.com/scan-response
-      - --interceptor=before:http:https://siem.company.com/log-request
-      - --block-secrets
-      - --verify-signatures
-      - --log-calls
-    volumes:
-      - ./security-policies:/security:ro
-      - session-data:/tmp  # Persistent session state
-    environment:
-      - GITHUB_TOKEN_SOURCE=vault://production/github-tokens
+### Custom Threat Detection
+```bash
+# Industry-specific sensitive data patterns
+if echo "$RESPONSE_TEXT" | grep -qiE '(HIPAA|PCI|SOX|medical|credit.*card|ssn|patient)'; then
+    echo "🚨 BLOCKED: Regulated data detected" >&2
+    # Return compliance block...
+fi
 ```
 
 ## 🛠️ **Troubleshooting**
@@ -257,7 +351,21 @@ services:
 docker compose up mcp-gateway --verbose
 
 # Check interceptor logs
-docker compose logs mcp-gateway | grep "🚨 BLOCKING"
+docker compose logs mcp-gateway | grep "🚨"
+
+# Test individual interceptors
+echo '{"params":{"name":"get_file_contents","arguments":{"repo":"test","owner":"user"}}}' | ./cross-repo-blocker.sh
+```
+
+### Testing New Interceptors:
+```bash
+# Test sensitive data filter
+echo '{"content":[{"text":"User salary: $150,000 annually"}]}' | ./sensitive-data-filter.sh
+
+# Test attack pattern detection  
+mkdir -p /tmp/mcp-sequence
+echo "2025-01-01T12:00:00:list_issues:user/repo" >> /tmp/mcp-sequence/tool_sequence
+echo '{"params":{"name":"get_repositories"}}' | ./attack-pattern-detector.sh
 ```
 
 ## 🎉 **Success Stories**: What You've Built
@@ -267,6 +375,8 @@ docker compose logs mcp-gateway | grep "🚨 BLOCKING"
 ✅ **Production-ready architecture** for enterprise deployment  
 ✅ **Complete audit trail** for compliance requirements  
 ✅ **Zero-downtime protection** that doesn't impact legitimate use  
+✅ **Defense-in-depth** with multiple interceptor layers  
+✅ **Behavioral analysis** for advanced threat detection  
 
 ## 📚 **Learn More**
 
@@ -290,6 +400,7 @@ When prompt injection attacks occur (and they will), you get:
 - ✅ **Real-time blocking** instead of successful data theft
 - ✅ **Complete visibility** instead of discovering breaches weeks later  
 - ✅ **Contained incidents** instead of enterprise-wide compromise
+- ✅ **Defense-in-depth** instead of hoping for the best
 
 *This working demonstration shows exactly how interceptors prevent the Invariant Labs GitHub MCP Data Heist.*
 
