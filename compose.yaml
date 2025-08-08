@@ -1,0 +1,35 @@
+cat > docker-compose.yml << 'EOF'
+services:
+  mcp-gateway:
+    image: docker/mcp-gateway
+    command:
+      - gateway
+      - run
+      - --transport=streaming
+      - --port=8080
+      - --servers=github-official
+      - --interceptor=before:exec:/scripts/cross-repo-blocker.sh
+      - --interceptor=after:exec:/scripts/audit-logger.sh
+      - --log-calls
+      - --verbose
+    volumes:
+      - .:/scripts:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8080:8080"
+    environment:
+      - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PERSONAL_ACCESS_TOKEN}
+
+  test-client:
+    build:
+      dockerfile_inline: |
+        FROM python:3.11-alpine
+        RUN pip install mcp httpx
+        WORKDIR /app
+        COPY test-attack.py .
+        CMD ["python", "test-attack.py"]
+    depends_on:
+      - mcp-gateway
+    environment:
+      - MCP_HOST=http://mcp-gateway:8080/mcp
+EOF
