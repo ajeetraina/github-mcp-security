@@ -1,13 +1,12 @@
-
 #!/bin/bash
 
 # Read the tool call JSON from stdin
 input=$(cat)
 
-# Extract tool name and arguments
-tool_name=$(echo "$input" | jq -r '.params.name // ""')
-repo=$(echo "$input" | jq -r '.params.arguments.repo // ""')
-owner=$(echo "$input" | jq -r '.params.arguments.owner // ""')
+# Simple JSON extraction without jq (more reliable in containers)
+repo=$(echo "$input" | grep -o '"repo":"[^"]*"' | cut -d'"' -f4)
+owner=$(echo "$input" | grep -o '"owner":"[^"]*"' | cut -d'"' -f4)
+tool_name=$(echo "$input" | grep -o '"name":"[^"]*"' | cut -d'"' -f4)
 
 # Log the tool call for monitoring
 echo "🔍 Tool: $tool_name, Repo: $owner/$repo" >&2
@@ -18,7 +17,13 @@ if [[ -z "$repo" || -z "$owner" ]]; then
 fi
 
 repo_id="${owner}/${repo}"
-session_file="/tmp/github-session-lock"
+
+# Use different paths for container vs local testing
+if [[ -d "/scripts" ]]; then
+    session_file="/scripts/.session-lock"  # Container path
+else
+    session_file="./.session-lock"          # Local testing path
+fi
 
 # Check session lock
 if [[ -f "$session_file" ]]; then
@@ -29,11 +34,11 @@ if [[ -f "$session_file" ]]; then
         echo "   Blocked attempt: $repo_id" >&2
         
         # Return error response to block the attack
-        cat << JSON
+        cat << 'JSON'
 {
   "content": [
     {
-      "text": "🛡️ SECURITY BLOCK: Cross-repository access prevented\n\n❌ Attempted: $repo_id\n✅ Allowed: $locked_repo\n\nThis session is restricted to one repository to prevent data theft attacks."
+      "text": "🛡️ SECURITY BLOCK: Cross-repository access prevented\n\nThis session is restricted to one repository to prevent data theft attacks."
     }
   ],
   "isError": true
@@ -42,13 +47,10 @@ JSON
         exit 0
     fi
 else
-    # Lock session to first repository accessed
+    # Lock session to first repository accessed  
     echo "$repo_id" > "$session_file"
     echo "🔒 Session locked to repository: $repo_id" >&2
 fi
 
 # Allow the call to proceed
 exit 0
-
-
-chmod +x cross-repo-blocker.sh
