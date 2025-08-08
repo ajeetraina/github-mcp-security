@@ -1,4 +1,4 @@
-cat > test-local.sh << 'EOF'
+
 #!/bin/bash
 
 echo "🧪 Testing GitHub MCP Security Interceptors"
@@ -26,6 +26,5 @@ echo "Exit code: $?"
 # Clean up
 rm -f /tmp/github-session-lock
 echo -e "\n✅ Test completed!"
-EOF
 
-chmod +x test-local.sh
+
