@@ -1,4 +1,4 @@
-cat > docker-compose.yml << 'EOF'
+
 services:
   mcp-gateway:
     image: docker/mcp-gateway
@@ -32,4 +32,4 @@ services:
       - mcp-gateway
     environment:
       - MCP_HOST=http://mcp-gateway:8080/mcp
-EOF
+
