@@ -1,0 +1,38 @@
+# docker-compose-security.yaml - Production security setup
+services:
+  mcp-gateway:
+    image: docker/mcp-gateway
+    command:
+      - --transport=streaming
+      - --port=8080
+      - --servers=github-official
+      - --interceptor=before:exec:/scripts/cross-repo-blocker.sh
+      - --interceptor=before:exec:/scripts/attack-pattern-detector.sh
+      - --interceptor=after:exec:/scripts/sensitive-data-filter.sh
+      - --interceptor=after:exec:/scripts/sequence-analyzer.sh
+      - --interceptor=after:exec:/scripts/audit-logger.sh
+      - --log-calls
+      - --verbose
+    volumes:
+      - .:/scripts:ro
+      - session-data:/tmp
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8080:8080"
+    environment:
+      - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PERSONAL_ACCESS_TOKEN}
+    networks:
+      - mcp-security
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+
+volumes:
+  session-data:
+    driver: local
+
+networks:
+  mcp-security:
+    driver: bridge
