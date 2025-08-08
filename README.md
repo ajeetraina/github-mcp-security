@@ -231,6 +231,6 @@ This repository demonstrates the core concepts. For production use:
 
 ---
 
-**The bottom line**: Docker MCP Gateway interceptors transform GitHub MCP integrations from attack vectors into secure, monitored environments. When prompt injection inevitably occurs, you get real-time blocking and complete visibility rather than discovering data theft weeks later.
+Docker MCP Gateway interceptors transform GitHub MCP integrations from attack vectors into secure, monitored environments. When prompt injection inevitably occurs, you get real-time blocking and complete visibility rather than discovering data theft weeks later.
 
 *This demo shows exactly how interceptors would have prevented the Invariant Labs GitHub MCP Data Heist.*
