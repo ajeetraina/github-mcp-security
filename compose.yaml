@@ -11,6 +11,7 @@ services:
       - --verbose
     volumes:
       - .:/scripts:ro
+      - session-data:/tmp  # Shared volume for session persistence across container calls
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "8080:8080"
@@ -55,6 +56,11 @@ services:
       - ./test-attack.py:/app/test-attack.py:ro
     stdin_open: true
     tty: true
+
+# Shared volume for session state persistence
+volumes:
+  session-data:
+    driver: local
 
 networks:
   mcp-network:
