@@ -16,7 +16,7 @@ The Invariant Labs research revealed a critical vulnerability where attackers ca
 
 **Real Impact**: Private salary data, confidential business plans, and personal information stolen through innocent "check the issues" commands.
 
-## 🛡️ The Solution: Docker MCP Gateway Interceptors
+## The Solution: Docker MCP Gateway Interceptors
 
 **Proven Defense** - Our testing demonstrates that Docker MCP Gateway **interceptors** provide real-time protection:
 - ✅ **Session isolation**: Lock AI agents to one repository per session
@@ -24,7 +24,7 @@ The Invariant Labs research revealed a critical vulnerability where attackers ca
 - ✅ **Real-time monitoring**: Block attacks as they happen
 - ✅ **Complete audit trails**: Full visibility into all AI agent actions
 
-## 📁 Repository Contents
+## Repository Contents
 
 ```
 ├── cross-repo-blocker.sh       # 🛡️ CORE: Session isolation - blocks cross-repo attacks
@@ -41,16 +41,16 @@ The Invariant Labs research revealed a critical vulnerability where attackers ca
 
 ### Interceptor Categories
 
-**🛡️ Core Protection (Essential)**
+** Core Protection (Essential)**
 - `cross-repo-blocker.sh` - **PRIMARY DEFENSE**: Prevents the exact Invariant Labs attack
 - `audit-logger.sh` - **MONITORING**: Basic logging and sensitive data warnings
 
-**🔒 Advanced Protection (Enterprise)**
+** Advanced Protection (Enterprise)**
 - `sensitive-data-filter.sh` - **DLP**: Scans responses for secrets, salaries, confidential data
 - `attack-pattern-detector.sh` - **BEHAVIORAL**: Identifies suspicious tool call sequences  
 - `sequence-analyzer.sh` - **CONTENT**: Detects prompt injection in issue content
 
-## 🚀 **Proven Results** - Quick Demo
+##  **Proven Results** - Quick Demo
 
 ### Prerequisites
 - Docker Desktop 4.42.0+ with MCP support
