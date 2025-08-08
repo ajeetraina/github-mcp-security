@@ -1,12 +1,12 @@
 # GitHub MCP Security: Interceptor-Based Attack Prevention
 
-**✅ WORKING DEMONSTRATION** - This repository provides a **complete, tested demonstration** of how **Docker MCP Gateway interceptors** successfully prevent the [GitHub MCP Data Heist attack](https://invariantlabs.ai/blog/github-mcp-exploit) discovered by Invariant Labs.
+This repository provides a **complete, tested demonstration** of how **Docker MCP Gateway interceptors** successfully prevent the [GitHub MCP Data Heist attack](https://invariantlabs.ai/blog/github-mcp-exploit) discovered by Invariant Labs.
 
 ![Security Status](https://img.shields.io/badge/Security-Attack%20Prevented-brightgreen)
 ![Demo Status](https://img.shields.io/badge/Demo-Working-success)
 ![Docker MCP](https://img.shields.io/badge/Docker%20MCP-Interceptors-blue)
 
-## 🚨 The Threat: GitHub MCP Data Heist
+## The Threat: GitHub MCP Data Heist
 
 The Invariant Labs research revealed a critical vulnerability where attackers can:
 1. **Plant malicious GitHub issues** in public repositories  
