@@ -26,6 +26,7 @@ This repository provides a **complete, tested demonstration** of how **Docker MC
 - 5 minutes to see security in action
 
 ### 1. Clone and Setup
+
 ```bash
 git clone https://github.com/ajeetraina/github-mcp-security.git
 cd github-mcp-security
@@ -37,13 +38,13 @@ chmod +x *.sh
 export GITHUB_PERSONAL_ACCESS_TOKEN="your_github_token_here"
 ```
 
-### 2. **PROOF**: Test Core Interceptor Logic Locally
+### 2. Test Core Interceptor Logic Locally
 ```bash
 # Demonstrate the core security blocking in action
 ./test-local.sh
 ```
 
-**✅ PROVEN OUTPUT** (Real results from our testing):
+** (Real results from our testing):
 ```
 🧪 Testing GitHub MCP Security Interceptors
 
@@ -80,7 +81,7 @@ Exit code: 0
 - ✅ Same repository access: **ALLOWED** (normal workflow)
 - 🛡️ Cross-repository attack: **BLOCKED** (security working!)
 
-### 3. **DEMONSTRATION**: Full Docker Security Test
+### 3. Full Docker Security Test
 ```bash
 # Start the protected MCP Gateway with interceptors
 docker compose up mcp-gateway
@@ -139,14 +140,7 @@ Result: Complete data breach 💥
 Result: Attack neutralized, data protected ✅
 ```
 
-## 📊 **VERIFIED**: Security Monitoring Results
 
-| Attack Vector | Traditional MCP | Docker MCP Gateway | Status |
-|---------------|-----------------|-------------------|---------|
-| Cross-repo access to `microsoft/vscode` | ❌ **SUCCESS** (Data stolen) | ✅ **BLOCKED** | 🛡️ **PROTECTED** |
-| Cross-repo access to `docker/compose` | ❌ **SUCCESS** (Data stolen) | ✅ **BLOCKED** | 🛡️ **PROTECTED** |
-| Private data exfiltration | ❌ **SUCCESS** (Salaries exposed) | ✅ **BLOCKED** | 🛡️ **PROTECTED** |
-| **Overall Security** | ❌ **CATASTROPHIC BREACH** | ✅ **ATTACK PREVENTED** | 🎉 **SUCCESS** |
 
 ## 🔍 **Technical**: How the Interceptors Work
 
@@ -205,144 +199,4 @@ if echo "$RESPONSE_TEXT" | grep -qiE '(read.*README.*all.*repos|add.*chapter.*au
     # Return sanitized response
 fi
 ```
-
-### Key Security Features:
-- 🔒 **Session isolation**: First repository access locks the session
-- 🛡️ **Real-time blocking**: Attacks stopped during execution
-- 📝 **Complete audit logging**: Full visibility into all attempts
-- ⚡ **Zero latency**: Blocking happens instantly
-- 🧠 **Behavioral analysis**: Detects attack patterns and sequences
-- 🔒 **Content filtering**: Removes sensitive data and prompt injections
-
-## 🏢 **Production Ready**: Enterprise Deployment
-
-### Basic Protection (Minimal Setup)
-```yaml
-services:
-  mcp-gateway:
-    image: docker/mcp-gateway
-    command:
-      - --interceptor=before:exec:/security/cross-repo-blocker.sh
-      - --interceptor=after:exec:/security/audit-logger.sh
-      - --servers=github-official
-      - --log-calls
-```
-
-### Advanced Protection (Full Defense-in-Depth)
-```yaml
-services:
-  mcp-gateway:
-    image: docker/mcp-gateway
-    command:
-      - --interceptor=before:exec:/security/cross-repo-blocker.sh
-      - --interceptor=before:exec:/security/attack-pattern-detector.sh
-      - --interceptor=after:exec:/security/sensitive-data-filter.sh
-      - --interceptor=after:exec:/security/sequence-analyzer.sh
-      - --interceptor=before:http:https://siem.company.com/log-request
-      - --block-secrets
-      - --verify-signatures
-      - --log-calls
-    volumes:
-      - ./:/security:ro
-      - session-data:/tmp
-    environment:
-      - GITHUB_TOKEN_SOURCE=vault://production/github-tokens
-```
-
-### Enterprise SIEM Integration
-```yaml
-services:
-  mcp-gateway:
-    image: docker/mcp-gateway
-    command:
-      - --interceptor=before:exec:/security/cross-repo-blocker.sh
-      - --interceptor=after:http:https://dlp.company.com/scan-response
-      - --interceptor=before:http:https://siem.company.com/log-request
-      - --interceptor=after:exec:/security/audit-logger.sh
-    volumes:
-      - ./security-policies:/security:ro
-      - session-data:/tmp
-```
-
-## 🔧 **Customization**: Add Your Own Security Rules
-
-### Repository Access Controls
-```bash
-# Block access to sensitive repositories
-if [[ "$repo" =~ (secrets|private|internal|salary) ]]; then
-    echo "🚨 BLOCKED: Sensitive repository" >&2
-    # Return security block...
-fi
-
-# Restrict specific users
-if [[ "$owner" == "high-risk-user" ]]; then
-    echo "🚨 BLOCKED: User access restricted" >&2
-    # Return security block...
-fi
-```
-
-### Time-Based Security
-```bash
-# Time-based restrictions
-current_hour=$(date +%H)
-if [[ $current_hour -lt 9 || $current_hour -gt 17 ]]; then
-    echo "🚨 BLOCKED: Outside business hours" >&2
-    # Return security block...
-fi
-```
-
-### Custom Threat Detection
-```bash
-# Industry-specific sensitive data patterns
-if echo "$RESPONSE_TEXT" | grep -qiE '(HIPAA|PCI|SOX|medical|credit.*card|ssn|patient)'; then
-    echo "🚨 BLOCKED: Regulated data detected" >&2
-    # Return compliance block...
-fi
-```
-
-## 🛠️ **Troubleshooting**
-
-### Common Issues:
-
-**Issue**: `exit status 127` in container logs  
-**Solution**: Normal - interceptors are still blocking attacks correctly
-
-**Issue**: Session not persisting between calls  
-**Solution**: Ensure `session-data` volume is mounted correctly
-
-**Issue**: Attacks not being blocked  
-**Solution**: Check that scripts are executable: `chmod +x *.sh`
-
-### Debug Mode:
-```bash
-# Run with verbose logging
-docker compose up mcp-gateway --verbose
-
-# Check interceptor logs
-docker compose logs mcp-gateway | grep "🚨"
-
-# Test individual interceptors
-echo '{"params":{"name":"get_file_contents","arguments":{"repo":"test","owner":"user"}}}' | ./cross-repo-blocker.sh
-```
-
-### Testing New Interceptors:
-```bash
-# Test sensitive data filter
-echo '{"content":[{"text":"User salary: $150,000 annually"}]}' | ./sensitive-data-filter.sh
-
-# Test attack pattern detection  
-mkdir -p /tmp/mcp-sequence
-echo "2025-01-01T12:00:00:list_issues:user/repo" >> /tmp/mcp-sequence/tool_sequence
-echo '{"params":{"name":"get_repositories"}}' | ./attack-pattern-detector.sh
-```
-
-## 🎉 **Success Stories**: What You've Built
-
-✅ **Working demonstration** of interceptor-based security  
-✅ **Real-time attack prevention** against actual threats  
-✅ **Production-ready architecture** for enterprise deployment  
-✅ **Complete audit trail** for compliance requirements  
-✅ **Zero-downtime protection** that doesn't impact legitimate use  
-✅ **Defense-in-depth** with multiple interceptor layers  
-✅ **Behavioral analysis** for advanced threat detection  
 
