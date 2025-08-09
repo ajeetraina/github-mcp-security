@@ -1,12 +1,12 @@
 
 #!/bin/bash
 
-echo "🧪 Testing GitHub MCP Security Interceptors"
+echo "Testing GitHub MCP Security Interceptors"
 
 # Clear any existing session locks
 rm -f /tmp/github-session-lock
 
-echo -e "\n1️⃣ Testing cross-repo blocking with mock data..."
+echo -e "\n Testing cross-repo blocking with mock data..."
 
 # Test 1: First repo access (should work)
 echo "Testing first repository access:"
@@ -25,6 +25,6 @@ echo "Exit code: $?"
 
 # Clean up
 rm -f /tmp/github-session-lock
-echo -e "\n✅ Test completed!"
+echo -e "\n Test completed!"
 
 
