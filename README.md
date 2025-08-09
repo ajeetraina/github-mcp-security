@@ -378,30 +378,3 @@ echo '{"params":{"name":"get_repositories"}}' | ./attack-pattern-detector.sh
 ✅ **Defense-in-depth** with multiple interceptor layers  
 ✅ **Behavioral analysis** for advanced threat detection  
 
-## 📚 **Learn More**
-
-- [Docker MCP Gateway Documentation](https://docs.docker.com/ai/mcp-catalog-and-toolkit/)
-- [MCP Security Best Practices](https://docs.docker.com/ai/mcp-catalog-and-toolkit/security/)
-- [Invariant Labs Original Research](https://invariantlabs.ai/blog/github-mcp-exploit)
-- [Model Context Protocol Specification](https://spec.modelcontextprotocol.io/)
-
-## 🔗 **Related Projects**
-
-- [Docker MCP Catalog](https://hub.docker.com/mcp) - Browse 100+ secure, containerized MCP servers
-- [MCP Gateway Repository](https://github.com/docker/mcp-gateway) - Official Docker MCP Gateway source code
-
----
-
-## 🏆 **Bottom Line**
-
-**This repository proves that Docker MCP Gateway interceptors transform GitHub MCP integrations from catastrophic attack vectors into secure, monitored environments.**
-
-When prompt injection attacks occur (and they will), you get:
-- ✅ **Real-time blocking** instead of successful data theft
-- ✅ **Complete visibility** instead of discovering breaches weeks later  
-- ✅ **Contained incidents** instead of enterprise-wide compromise
-- ✅ **Defense-in-depth** instead of hoping for the best
-
-*This working demonstration shows exactly how interceptors prevent the Invariant Labs GitHub MCP Data Heist.*
-
-**The horror story becomes a success story.** 🛡️
