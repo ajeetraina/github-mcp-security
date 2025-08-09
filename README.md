@@ -19,18 +19,6 @@ This repository provides a **complete, tested demonstration** of how **Docker MC
 └── README.md                   # 📖 Complete documentation
 ```
 
-### Interceptor Categories
-
-** Core Protection (Essential)**
-- `cross-repo-blocker.sh` - **PRIMARY DEFENSE**: Prevents the exact Invariant Labs attack
-- `audit-logger.sh` - **MONITORING**: Basic logging and sensitive data warnings
-
-** Advanced Protection (Enterprise)**
-- `sensitive-data-filter.sh` - **DLP**: Scans responses for secrets, salaries, confidential data
-- `attack-pattern-detector.sh` - **BEHAVIORAL**: Identifies suspicious tool call sequences  
-- `sequence-analyzer.sh` - **CONTENT**: Detects prompt injection in issue content
-
-##  **Proven Results** - Quick Demo
 
 ### Prerequisites
 - Docker Desktop 4.42.0+ with MCP support
