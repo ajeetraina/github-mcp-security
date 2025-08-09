@@ -2,6 +2,12 @@
 
 This repository provides a **complete, tested demonstration** of how **Docker MCP Gateway interceptors** successfully prevent the [GitHub MCP Data Heist attack](https://invariantlabs.ai/blog/github-mcp-exploit) discovered by Invariant Labs.
 
+## List of security scripts:
+
+- cross-repo-blocker.sh implements session locking
+- audit-logger.sh detects sensitive data patterns
+- attack-pattern-detector.sh identifies suspicious tool call sequences
+
 
 
 
