@@ -4,21 +4,6 @@ This repository provides a **complete, tested demonstration** of how **Docker MC
 
 
 
-## Repository Contents
-
-```
-├── cross-repo-blocker.sh       # 🛡️ CORE: Session isolation - blocks cross-repo attacks
-├── audit-logger.sh             # 📝 CORE: Basic audit logging and sensitive data warnings
-├── sensitive-data-filter.sh    # 🔒 ADVANCED: DLP protection - blocks sensitive data exfiltration  
-├── attack-pattern-detector.sh  # 🎯 ADVANCED: Behavioral analysis - detects attack sequences
-├── sequence-analyzer.sh        # 🧠 ADVANCED: Content analysis - identifies prompt injection
-├── compose.yaml                # 🐳 Docker Compose with security architecture
-├── test-attack.py              # 🎯 Attack simulation that proves protection works
-├── test-local.sh               # 🧪 Local testing script for interceptors
-├── test-attack-fixed.py        # ✅ Fixed version showing successful blocking
-└── README.md                   # 📖 Complete documentation
-```
-
 
 ### Prerequisites
 - Docker Desktop 4.43.0+ with MCP support
