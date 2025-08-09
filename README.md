@@ -21,7 +21,7 @@ This repository provides a **complete, tested demonstration** of how **Docker MC
 
 
 ### Prerequisites
-- Docker Desktop 4.42.0+ with MCP support
+- Docker Desktop 4.43.0+ with MCP support
 - GitHub Personal Access Token ([create one here](https://github.com/settings/tokens))
 - 5 minutes to see security in action
 
