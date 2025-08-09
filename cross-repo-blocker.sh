@@ -29,7 +29,7 @@ fi
 if [[ -f "$session_file" ]]; then
     locked_repo=$(cat "$session_file")
     if [[ "$repo_id" != "$locked_repo" ]]; then
-        echo "🚨 BLOCKING CROSS-REPO ACCESS!" >&2
+        echo " BLOCKING CROSS-REPO ACCESS!" >&2
         echo "   Session locked to: $locked_repo" >&2
         echo "   Blocked attempt: $repo_id" >&2
         
@@ -38,7 +38,7 @@ if [[ -f "$session_file" ]]; then
 {
   "content": [
     {
-      "text": "🛡️ SECURITY BLOCK: Cross-repository access prevented\n\nThis session is restricted to one repository to prevent data theft attacks."
+      "text": " SECURITY BLOCK: Cross-repository access prevented\n\nThis session is restricted to one repository to prevent data theft attacks."
     }
   ],
   "isError": true
