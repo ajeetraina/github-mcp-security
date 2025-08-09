@@ -3,23 +3,6 @@
 This repository provides a **complete, tested demonstration** of how **Docker MCP Gateway interceptors** successfully prevent the [GitHub MCP Data Heist attack](https://invariantlabs.ai/blog/github-mcp-exploit) discovered by Invariant Labs.
 
 
-## The Threat: GitHub MCP Data Heist
-
-The Invariant Labs research revealed a critical vulnerability where attackers can:
-1. **Plant malicious GitHub issues** in public repositories  
-2. **Prompt inject AI agents** when they read issue content
-3. **Steal private repository data** using broad GitHub tokens
-4. **Exfiltrate sensitive information** (salaries, private projects, confidential data)
-
-**Real Impact**: Private salary data, confidential business plans, and personal information stolen through innocent "check the issues" commands.
-
-## The Solution: Docker MCP Gateway Interceptors
-
-**Proven Defense** - Our testing demonstrates that Docker MCP Gateway **interceptors** provide real-time protection:
-- ✅ **Session isolation**: Lock AI agents to one repository per session
-- ✅ **Cross-repository blocking**: Prevent data theft across different repositories  
-- ✅ **Real-time monitoring**: Block attacks as they happen
-- ✅ **Complete audit trails**: Full visibility into all AI agent actions
 
 ## Repository Contents
 
